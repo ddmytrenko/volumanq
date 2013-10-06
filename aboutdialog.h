@@ -2,6 +2,7 @@
 #define ABOUTDIALOG_H
 
 #include <QDialog>
+#include <QMenu>
 
 namespace Ui {
   class AboutDialog;
