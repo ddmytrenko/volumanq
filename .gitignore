@@ -1,0 +1,39 @@
+### C++ objects and libs
+
+*.slo
+*.lo
+*.o
+*.a
+*.la
+*.lai
+*.so
+*.dll
+*.dylib
+
+
+
+### QTCreator temporary
+
+*.autosave
+
+
+
+### QTCreator project
+
+*.pro.user
+*.pro.user.*
+moc_*.cpp
+qrc_*.cpp
+
+
+
+### Build
+
+Makefile
+*-build-*
+
+
+
+### Gedit temporary
+
+*~

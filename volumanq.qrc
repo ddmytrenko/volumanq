@@ -1,0 +1,16 @@
+<RCC>
+    <qresource prefix="/">
+        <file>resources/mute_128x128.png</file>
+        <file>resources/volume0_128x128.png</file>
+        <file>resources/volume25_128x128.png</file>
+        <file>resources/volume50_128x128.png</file>
+        <file>resources/volume75_128x128.png</file>
+        <file>resources/volume100_128x128.png</file>
+        <file>resources/quit_128x128.png</file>
+        <file>resources/star_128x128.png</file>
+        <file>resources/settings_128x128.png</file>
+        <file>resources/logo_128x128.png</file>
+        <file>resources/help_128x128.png</file>
+        <file>resources/refresh_128x128.png</file>
+    </qresource>
+</RCC>
