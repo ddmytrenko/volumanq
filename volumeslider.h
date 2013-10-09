@@ -1,28 +1,32 @@
-#ifndef VOLUMANQWINDOW_H
-#define VOLUMANQWINDOW_H
+#ifndef VOLUMESLIDER_H
+#define VOLUMESLIDER_H
 
-#include <QDialog>
+#include <QWidget>
+#include <QSlider>
 #include <QSystemTrayIcon>
 
-typedef enum {
-  AUDIO_VOLUME_SET,
-  AUDIO_VOLUME_GET
-} AudioVolumeAction;
+#include "alsamodule.h"
 
 class QMenu;
 
-class VolumeQWindow : public QDialog
+class VolumeSlider : public QWidget
 {
   Q_OBJECT
 
 public:
-  VolumeQWindow();
-  ~VolumeQWindow();
+  explicit VolumeSlider(QWidget *parent = 0);
+  ~VolumeSlider();
 
 private:
+  void setUpQSlider();
   void createActions();
   void createTrayIcon();
   void setTrayIcon(long volumeLevel);
+  void moveOnTopOfCursor();
+
+  QSlider *slider;
+
+  AlsaModule *alsaModule;
 
   QSystemTrayIcon *trayIcon;
   QMenu *trayMenu;
@@ -35,23 +39,14 @@ private:
   long currentVolume;   // the value of current master volume
   long savedVolume;     // saved value of current master volume (using in mute/unmute option)
 
-  /**
-   * This method is using for getting and setting master volume
-   * system-wide via ALSA (using libasound2-dev).
-   *
-   * @brief audioVolume
-   * @param action
-   * @param volume
-   * @return
-   */
-  int audioVolume(AudioVolumeAction action, long* volume);
-
   void refreshState();
 
 private slots:
   void trayIconClicked(QSystemTrayIcon::ActivationReason);
+  void changeSystemVolumeLevel(int);
   void onAboutMenuItemClick();
   void onRefreshMenuItemClick();
+//  void onSettingsMenuItemClick();
 };
 
-#endif // VOLUMANQWINDOW_H
+#endif // VOLUMESLIDER_H

@@ -13,12 +13,15 @@ TEMPLATE = app
 
 
 SOURCES += main.cpp\
-        volumanqwindow.cpp \
-    aboutdialog.cpp
+    aboutdialog.cpp \
+    volumeslider.cpp \
+    alsamodule.cpp
 
-HEADERS  += volumanqwindow.h \
+HEADERS  += \
     log.h \
-    aboutdialog.h
+    aboutdialog.h \
+    volumeslider.h \
+    alsamodule.h
 
 FORMS    += \
     aboutdialog.ui

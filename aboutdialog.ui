@@ -135,7 +135,7 @@
     </rect>
    </property>
    <property name="text">
-    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;justify&quot;&gt;Simple volume indicator for Linux written on Qt 4 using ALSA. It is really useful for small desktop environments and window managers such as: LXDE, Fluxbox, PekWM and others.&lt;/p&gt;&lt;p align=&quot;justify&quot;&gt;It is free and with open sources licensed under the MIT License.&lt;/p&gt;&lt;p&gt;2013 (c) Dmytro Dmytrenko, &lt;a href=&quot;mailto:dmytrenko.d@gmail.com&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;dmytrenko.d@gmail.com&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;justify&quot;&gt;Simple volume indicator for Linux written on Qt 5 using ALSA. It is really useful for small desktop environments and window managers such as: LXDE, Fluxbox, PekWM and others.&lt;/p&gt;&lt;p align=&quot;justify&quot;&gt;It is free and with open sources licensed under the MIT License.&lt;/p&gt;&lt;p&gt;2013 (c) Dmytro Dmytrenko, &lt;a href=&quot;mailto:dmytrenko.d@gmail.com&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;dmytrenko.d@gmail.com&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
    </property>
    <property name="textFormat">
     <enum>Qt::RichText</enum>

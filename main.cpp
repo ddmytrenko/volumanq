@@ -1,4 +1,4 @@
-#include "volumanqwindow.h"
+#include "volumeslider.h"
 #include <QApplication>
 
 int main(int argc, char *argv[])
@@ -6,10 +6,8 @@ int main(int argc, char *argv[])
   QApplication a(argc, argv);
   a.setQuitOnLastWindowClosed(false);
 
-  // settings QDialog has to be non-visible at the beginning
-  VolumeQWindow settings;
-  settings.setVisible(false);
-  settings.hide();
+  VolumeSlider slider;
+  slider.hide();
 
   return a.exec();
 }
