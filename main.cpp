@@ -3,11 +3,11 @@
 
 int main(int argc, char *argv[])
 {
-  QApplication a(argc, argv);
-  a.setQuitOnLastWindowClosed(false);
+    QApplication a(argc, argv);
+    a.setQuitOnLastWindowClosed(false);
 
-  VolumeSlider slider;
-  slider.hide();
+    VolumeSlider slider;
+    slider.hide();
 
-  return a.exec();
+    return a.exec();
 }

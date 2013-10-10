@@ -11,42 +11,42 @@ class QMenu;
 
 class VolumeSlider : public QWidget
 {
-  Q_OBJECT
+    Q_OBJECT
 
 public:
-  explicit VolumeSlider(QWidget *parent = 0);
-  ~VolumeSlider();
+    explicit VolumeSlider(QWidget *parent = 0);
+    ~VolumeSlider();
 
 private:
-  void setUpQSlider();
-  void createActions();
-  void createTrayIcon();
-  void setTrayIcon(long volumeLevel);
-  void moveOnTopOfCursor();
+    void setUpQSlider();
+    void createActions();
+    void createTrayIcon();
+    void setTrayIcon(long volumeLevel);
+    void moveOnTopOfCursor();
 
-  QSlider *slider;
+    QSlider *slider;
 
-  AlsaModule *alsaModule;
+    AlsaModule *alsaModule;
 
-  QSystemTrayIcon *trayIcon;
-  QMenu *trayMenu;
+    QSystemTrayIcon *trayIcon;
+    QMenu *trayMenu;
 
-//  QAction *settings;
-  QAction *refresh;
-  QAction *about;
-  QAction *close;
+    //  QAction *settings;
+    QAction *refresh;
+    QAction *about;
+    QAction *close;
 
-  long currentVolume;   // the value of current master volume
-  long savedVolume;     // saved value of current master volume (using in mute/unmute option)
+    long currentVolume;   // the value of current master volume
+    long savedVolume;     // saved value of current master volume (using in mute/unmute option)
 
-  void refreshState();
+    void refreshState();
 
 private slots:
-  void trayIconClicked(QSystemTrayIcon::ActivationReason);
-  void changeSystemVolumeLevel(int);
-  void onAboutMenuItemClick();
-  void onRefreshMenuItemClick();
-//  void onSettingsMenuItemClick();
+    void trayIconClicked(QSystemTrayIcon::ActivationReason);
+    void changeSystemVolumeLevel(int);
+    void onAboutMenuItemClick();
+    void onRefreshMenuItemClick();
+    //  void onSettingsMenuItemClick();
 };
 
 #endif // VOLUMESLIDER_H
