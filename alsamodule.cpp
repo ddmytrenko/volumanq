@@ -8,7 +8,7 @@ AlsaModule::AlsaModule()
 {
 }
 
-int AlsaModule::audioVolume(AudioVolumeAction action, long *volume)
+int AlsaModule::audio_volume(audio_volume_action action, long *volume, const char* mix_name)
 {
     int ret = 0;
 
@@ -16,17 +16,16 @@ int AlsaModule::audioVolume(AudioVolumeAction action, long *volume)
     snd_mixer_elem_t* elem;
     snd_mixer_selem_id_t* sid;
 
-    static const char* mixName = "Master";
-    static const char* soundCard = "default";
-    static int mixIndex = 0;
+    static const char* sound_card = "default";
+    static int mix_index = 0;
 
     snd_mixer_selem_id_alloca(&sid);
 
     /**
      * Setting simple mixer index and name
      */
-    snd_mixer_selem_id_set_index(sid, mixIndex);
-    snd_mixer_selem_id_set_name(sid, mixName);
+    snd_mixer_selem_id_set_index(sid, mix_index);
+    snd_mixer_selem_id_set_name(sid, mix_name);
 
     if ((snd_mixer_open(&handle, 0)) < 0)
     {
@@ -34,7 +33,7 @@ int AlsaModule::audioVolume(AudioVolumeAction action, long *volume)
         return -1;
     }
 
-    if ((snd_mixer_attach(handle, soundCard)) < 0)
+    if ((snd_mixer_attach(handle, sound_card)) < 0)
     {
         STDLog().Get(logERROR) << "could not attach mixer to default sound card!";
         snd_mixer_close(handle);
@@ -64,10 +63,10 @@ int AlsaModule::audioVolume(AudioVolumeAction action, long *volume)
         return -5;
     }
 
-    long minVol, maxVol;
+    long min_vol, max_vol;
 
-    snd_mixer_selem_get_playback_volume_range (elem, &minVol, &maxVol);
-    STDLog().Get(logDEBUG) << "volume range: [" << minVol << "," << maxVol << "]";
+    snd_mixer_selem_get_playback_volume_range (elem, &min_vol, &max_vol);
+    STDLog().Get(logDEBUG) << "volume range: [" << min_vol << "," << max_vol << "]";
 
     if(action == AUDIO_VOLUME_GET)
     {
@@ -80,14 +79,14 @@ int AlsaModule::audioVolume(AudioVolumeAction action, long *volume)
 
         STDLog().Get(logDEBUG) << "get volume " << *volume << " with status " << ret;
         /* make the value bound to 100 */
-        *volume -= minVol;
-        maxVol -= minVol;
-        minVol = 0;
+        *volume -= min_vol;
+        max_vol -= min_vol;
+        min_vol = 0;
 
         /**
          * make the volume bound from 0 to 100
          */
-        *volume = 100 * (*volume) / maxVol;
+        *volume = 100 * (*volume) / max_vol;
     }
     else if(action == AUDIO_VOLUME_SET)
     {
@@ -101,7 +100,7 @@ int AlsaModule::audioVolume(AudioVolumeAction action, long *volume)
             return -7;
         }
 
-        long vol = (*volume * (maxVol - minVol) / (100-1)) + minVol;
+        long vol = (*volume * (max_vol - min_vol) / (100-1)) + min_vol;
 
         if(snd_mixer_selem_set_playback_volume(elem, SND_MIXER_SCHN_UNKNOWN, vol) < 0)
         {

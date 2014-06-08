@@ -18,34 +18,34 @@ public:
     ~VolumeSlider();
 
 private:
-    void setUpQSlider();
-    void createActions();
-    void createTrayIcon();
-    void setTrayIcon(long volumeLevel);
-    void moveOnTopOfCursor();
+    void setup_qslider();
+    void create_actions();
+    void create_tray_icon();
+    void set_tray_icon(long volumeLevel);
+    void move_on_top_of_cursor();
 
     QSlider *slider;
 
-    AlsaModule *alsaModule;
+    AlsaModule *alsa_module;
 
-    QSystemTrayIcon *trayIcon;
-    QMenu *trayMenu;
+    QSystemTrayIcon *tray_icon;
+    QMenu *tray_menu;
 
     //  QAction *settings;
     QAction *refresh;
     QAction *about;
     QAction *close;
 
-    long currentVolume;   // the value of current master volume
-    long savedVolume;     // saved value of current master volume (using in mute/unmute option)
+    long current_vol;   // the value of current master volume
+    long saved_vol;     // saved value of current master volume (using in mute/unmute option)
 
-    void refreshState();
+    void refresh_state();
 
 private slots:
-    void trayIconClicked(QSystemTrayIcon::ActivationReason);
-    void changeSystemVolumeLevel(int);
-    void onAboutMenuItemClick();
-    void onRefreshMenuItemClick();
+    void on_tray_icon_activation(QSystemTrayIcon::ActivationReason);
+    void change_mixer_volume(int);
+    void on_about_menu_item_click();
+    void on_refresh_menu_item_click();
     //  void onSettingsMenuItemClick();
 };
 

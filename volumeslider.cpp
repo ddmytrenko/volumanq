@@ -17,34 +17,34 @@
 
 VolumeSlider::VolumeSlider(QWidget *parent) : QWidget(parent)
 {
-    alsaModule = new AlsaModule();
+    alsa_module = new AlsaModule();
 
     setWindowFlags(Qt::Popup);
     resize(WIDTH, HEIGHT);
 
-    createActions();
-    createTrayIcon();
+    create_actions();
+    create_tray_icon();
 
-    refreshState();
+    refresh_state();
 
-    setUpQSlider();
+    setup_qslider();
 
-    trayIcon->show();
+    tray_icon->show();
 }
 
-void VolumeSlider::setUpQSlider()
+void VolumeSlider::setup_qslider()
 {
     slider = new QSlider(Qt::Vertical, this);
     slider->setRange(VOLUME_MUTE, VOLUME_MAX);
     slider->setSingleStep(SLIDER_SINGLE_STEP);
     slider->setPageStep(SLIDER_PAGE_STEP);
-    slider->setValue(currentVolume);
+    slider->setValue(current_vol);
     slider->resize(WIDTH, HEIGHT);
 
-    connect(slider, SIGNAL(valueChanged(int)), this, SLOT(changeSystemVolumeLevel(int)));
+    connect(slider, SIGNAL(valueChanged(int)), this, SLOT(change_mixer_volume(int)));
 }
 
-void VolumeSlider::createActions()
+void VolumeSlider::create_actions()
 {
     //  // Adding and connecting `Settings' action
     //  settings = new QAction(QIcon(":/resources/settings_128x128.png"), tr("&Settings"), this);
@@ -52,36 +52,36 @@ void VolumeSlider::createActions()
 
     // Adding and connecting `Refresh' action
     refresh = new QAction(QIcon(":/resources/refresh_128x128.png"), tr("Re&fresh"), this);
-    connect(refresh, SIGNAL(triggered()), this, SLOT(onRefreshMenuItemClick()));
+    connect(refresh, SIGNAL(triggered()), this, SLOT(on_refresh_menu_item_click()));
 
     // Adding and connecting `About' action
     about = new QAction(QIcon(":/resources/star_128x128.png"), tr("&About"), this);
-    connect(about, SIGNAL(triggered()), this, SLOT(onAboutMenuItemClick()));
+    connect(about, SIGNAL(triggered()), this, SLOT(on_about_menu_item_click()));
 
     // Adding and connecting `Quit' action
     close = new QAction(QIcon(":/resources/quit_128x128.png"), tr("&Quit"), this);
     connect(close, SIGNAL(triggered()), qApp, SLOT(quit()));
 }
 
-void VolumeSlider::createTrayIcon()
+void VolumeSlider::create_tray_icon()
 {
-    trayMenu = new QMenu(this);
+    tray_menu = new QMenu(this);
 
     //  trayMenu->addAction(settings);
     //  trayMenu->addSeparator();
-    trayMenu->addAction(refresh);
-    trayMenu->addSeparator();
-    trayMenu->addAction(about);
-    trayMenu->addAction(close);
+    tray_menu->addAction(refresh);
+    tray_menu->addSeparator();
+    tray_menu->addAction(about);
+    tray_menu->addAction(close);
 
-    trayIcon = new QSystemTrayIcon(this);
-    trayIcon->setContextMenu(trayMenu);
+    tray_icon = new QSystemTrayIcon(this);
+    tray_icon->setContextMenu(tray_menu);
 
-    connect(trayIcon, SIGNAL(activated(QSystemTrayIcon::ActivationReason)),
-            this, SLOT(trayIconClicked(QSystemTrayIcon::ActivationReason)));
+    connect(tray_icon, SIGNAL(activated(QSystemTrayIcon::ActivationReason)),
+            this, SLOT(on_tray_icon_activation(QSystemTrayIcon::ActivationReason)));
 }
 
-void VolumeSlider::moveOnTopOfCursor()
+void VolumeSlider::move_on_top_of_cursor()
 {
     QPoint p = cursor().pos();
     p.setX(p.x() - WIDTH/2);
@@ -89,93 +89,97 @@ void VolumeSlider::moveOnTopOfCursor()
     move(p);
 }
 
-void VolumeSlider::setTrayIcon(long volumeLevel)
+void VolumeSlider::set_tray_icon(long vol_level)
 {
-    if (currentVolume != volumeLevel)
+    if (current_vol != vol_level)
     {
-        STDLog().Get(logDEBUG) << "changing master volume from " << currentVolume << " to " << volumeLevel;
+        STDLog().Get(logDEBUG) << "changing master volume from " << current_vol << " to " << vol_level;
 
         /**
          * Current method set a different icon in order
          * to selected volume level.
          */
 
-        if (volumeLevel == 0) {
-            trayIcon->setIcon(QIcon(":/resources/mute_128x128.png"));
-        } else if (volumeLevel <= 12) {
-            trayIcon->setIcon(QIcon(":/resources/volume0_128x128.png"));
-        } else if (volumeLevel <= 37) {
-            trayIcon->setIcon(QIcon(":/resources/volume25_128x128.png"));
-        } else if (volumeLevel <= 62) {
-            trayIcon->setIcon(QIcon(":/resources/volume50_128x128.png"));
-        } else if (volumeLevel <= 87) {
-            trayIcon->setIcon(QIcon(":/resources/volume75_128x128.png"));
-        } else if (volumeLevel <= 100) {
-            trayIcon->setIcon(QIcon(":/resources/volume100_128x128.png"));
+        if (vol_level == 0) {
+            tray_icon->setIcon(QIcon(":/resources/mute_128x128.png"));
+        } else if (vol_level <= 12) {
+            tray_icon->setIcon(QIcon(":/resources/volume0_128x128.png"));
+        } else if (vol_level <= 37) {
+            tray_icon->setIcon(QIcon(":/resources/volume25_128x128.png"));
+        } else if (vol_level <= 62) {
+            tray_icon->setIcon(QIcon(":/resources/volume50_128x128.png"));
+        } else if (vol_level <= 87) {
+            tray_icon->setIcon(QIcon(":/resources/volume75_128x128.png"));
+        } else if (vol_level <= 100) {
+            tray_icon->setIcon(QIcon(":/resources/volume100_128x128.png"));
         }
 
-        currentVolume = volumeLevel;
+        current_vol = vol_level;
 
         /**
          * Set Master volume system wide via ALSA
          * Using libasound2-dev package.
          * LIBS += -lasound
          */
-        alsaModule->audioVolume(AUDIO_VOLUME_SET, &currentVolume);
+        if (alsa_module->audio_volume(AUDIO_VOLUME_SET, &current_vol, "PCM") < 0) {
+            alsa_module->audio_volume(AUDIO_VOLUME_SET, &current_vol, "Master");
+        }
 
         /**
          * Set tray icon hint message
          */
         QString hint = "Volume: ";
-        hint.append(QString("%1").arg(currentVolume));
+        hint.append(QString("%1").arg(current_vol));
         hint.append("%");
-        trayIcon->setToolTip(hint);
+        tray_icon->setToolTip(hint);
     }
 }
 
-void VolumeSlider::trayIconClicked(QSystemTrayIcon::ActivationReason reason)
+void VolumeSlider::on_tray_icon_activation(QSystemTrayIcon::ActivationReason reason)
 {
     if (reason == QSystemTrayIcon::Trigger)
     {
         /**
          * Mute/Unmute on click
          */
-        if (currentVolume > 0) {
-            savedVolume = currentVolume;
-            setTrayIcon(0);
+        if (current_vol > 0) {
+            saved_vol = current_vol;
+            set_tray_icon(0);
         } else {
-            setTrayIcon(savedVolume);
+            set_tray_icon(saved_vol);
         }
     }
     else if (reason == QSystemTrayIcon::MiddleClick)
     {
-        moveOnTopOfCursor();
+        move_on_top_of_cursor();
         show();
     }
 }
 
-void VolumeSlider::refreshState()
+void VolumeSlider::refresh_state()
 {
-    long systemVolume = 0;
-    alsaModule->audioVolume(AUDIO_VOLUME_GET, &systemVolume);
-    STDLog().Get(logDEBUG) << "system master volume level is " << systemVolume;
-    setTrayIcon(systemVolume);
+    long system_volume = 0;
+    if (alsa_module->audio_volume(AUDIO_VOLUME_GET, &system_volume, "PCM") < 0) {
+        alsa_module->audio_volume(AUDIO_VOLUME_GET, &system_volume, "Master");
+    }
+    STDLog().Get(logDEBUG) << "system master volume level is " << system_volume;
+    set_tray_icon(system_volume);
 }
 
-void VolumeSlider::onAboutMenuItemClick()
+void VolumeSlider::on_about_menu_item_click()
 {
     AboutDialog about;
     about.exec();
 }
 
-void VolumeSlider::onRefreshMenuItemClick()
+void VolumeSlider::on_refresh_menu_item_click()
 {
-    refreshState();
+    refresh_state();
 }
 
-void VolumeSlider::changeSystemVolumeLevel(int val)
+void VolumeSlider::change_mixer_volume(int val)
 {
-    setTrayIcon((long)val);
+    set_tray_icon((long)val);
 }
 
 //void VolumeSlider::onSettingsMenuItemClick()
@@ -184,11 +188,11 @@ void VolumeSlider::changeSystemVolumeLevel(int val)
 
 VolumeSlider::~VolumeSlider()
 {
-    delete trayIcon;
-    delete trayMenu;
+    delete tray_icon;
+    delete tray_menu;
     delete slider;
 
-    delete alsaModule;
+    delete alsa_module;
 
     //  delete settings;
     delete refresh;

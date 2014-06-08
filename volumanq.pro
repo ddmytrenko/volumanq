@@ -24,7 +24,7 @@ HEADERS  += \
     alsamodule.h
 
 FORMS    += \
-    aboutdialog.ui
+    forms/aboutdialog.ui
 
 RESOURCES += \
     volumanq.qrc
